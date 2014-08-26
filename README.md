@@ -5,7 +5,7 @@ Generally large web applications have a lot of css files with many developers wo
 
 We all know reusable, component-based web development is definitely the way forward. [Web components](http://css-tricks.com/modular-future-web-components/)  which are a collection of standards are working their way through the W3C.  They allows us to bundle up markup and styles in to reusable HTML elements which are *truly encapsulated*. What this means is we need to start thinking component based css development. While browsers are coming up with implementing web components standards, the current phase of developing large web applications with many css components is in a transition and could follow soft-encapsulation.
 
-Component CSS aims to improve the CSS authoring experience for large web applications with component-based development mind set at the core. 
+Component CSS presents a CSS architecture which simplifies the CSS authoring experience when developing large web applications. 
 
 
 1. [Elements](#elements)
@@ -13,7 +13,7 @@ Component CSS aims to improve the CSS authoring experience for large web applica
 3. [Directory Structure](#directory)
 4. [Naming Conventions for Simplified BEM ](#naming)
 5. [Architecture & Design](#architecture)
-6. [Examples](#examples)
+6. [Example](#example)
 
 
 <a name="elements"></a>
@@ -135,7 +135,51 @@ Please take a look the the directory structure which is derived from smacss. Not
 <code>_bootstrap-overrides.scss</code> Framework overrides only. Sometimes the level of specificity of framework selectors is so high that overriding them requires long specific selectors. Overriding at a global level should not be done in the context of a SCSS component, instead all global overrides go here.
 
 ##### Components
-Any unit of reusable CSS not mentioned above is considered a "component". We use AngularJS so I categorized them to 3 types of CSS components: view/page, directive, and standard; and hence the directory structure which is derived from SMACSS. In the example setup in this repository and if you look at the directory structure, I created explicit folders to be clear. If your application is small, you may put them in one folder. All components follow the [modified BEM naming convention](https://github.com/sathify/component-css#naming) in combination with the CamelCase. This got me *great wins* in making other team members start following BEM style syntax and also avoided lots of confusion when not using the typical BEM style with <code>-, --, & __</code> symbols!
+Any unit of reusable CSS not mentioned above is considered a "component". We use AngularJS so I categorized them to 3 types of CSS components: view/page, directive, and standard; and hence the directory structure which is derived from SMACSS. In the example setup in this repository and if you look at the directory structure, I created explicit folders to be clear. If your application is small, you may put them in one folder. All components follow the [modified BEM naming convention](https://github.com/sathify/component-css#naming) in combination with the CamelCase. This got me *great wins* in making other team members start following BEM style syntax. It also avoided a lot of confusion when moving away from using the typical BEM style with <code>-, --, & __</code> symbols which generate class names like <code>module-name__child-name--modifier-name</code>!
 
 
 Please make sure CSS class definition order in a component reflect the html view. This makes it easier to scan, style, edit and apply classes easily. Finally, please have an extensive style-guide for the web application and follow guidelines for [CSS](https://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml) and SASS (avoid <code>@extends</code>).
+
+<a name="example"></a>
+## Example
+
+Please refer to the [code](https://github.com/sathify/component-css/tree/master/styles) for an example set-up of the CSS. 
+
+You will be writing components like below. 
+```
+.ProductRating {
+  // nested element
+  @include e(title) {
+    ...
+  }
+  // nested element
+  @include e(star) {
+    ...
+    // nested element's modifier
+    @include m(active) {
+      ...
+    }
+  }
+}
+
+```
+Which will be compiled to below CSS.
+```
+.ProductRating {
+  ...
+}
+// nested element
+.ProductRating-title {
+  ...
+}
+// nested element
+.ProductRating-star {
+  ...
+}
+// nested element's modifier
+.ProductRating-star--active {
+  ...
+}
+```
+
+Please refer to the [BEM mixin](https://github.com/sathify/component-css/blob/master/styles/scss/mixins/_bem.scss) which uses reference selector to acheive this and is simpler than @at-root. [Working with BEM](http://www.integralist.co.uk/posts/maintainable-css-with-bem/) got way easier in version Sass 3.3> which gives us the ability to write maintainable and easily understandable code. 
